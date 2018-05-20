@@ -37,6 +37,8 @@ def update_stack(client):
 
 
 if __name__ == "__main__":
+    os.environ['AWS_REGION'] = 'us-east-1' if not pp('region') else pp('region')
+
     client = boto3.client('cloudformation')
     update_stack(client)
 
