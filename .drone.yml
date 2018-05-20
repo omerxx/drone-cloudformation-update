@@ -4,7 +4,7 @@ pipeline:
     repo: omerxx/drone-cloudformation-update
     tags: 
       - latest
-      - ${DRONE_BUILD}
+      - ${DRONE_BUILD_NUMBER}
     secrets:
       - docker_username
       - docker_password
