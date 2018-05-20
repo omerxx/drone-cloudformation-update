@@ -1,0 +1,10 @@
+pipeline:
+  docker:
+    image: plugins/docker
+    repo: omerxx/drone-cloudformation-update
+    tags: 
+      - latest
+    secrets:
+      - docker_username
+      - docker_password
+
