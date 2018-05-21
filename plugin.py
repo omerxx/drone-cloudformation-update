@@ -18,8 +18,8 @@ def env_handler(paramString):
         value = set.split('=')[1]
         omap.append(
             {
-                'name': set.split('=')[0],
-                'value': value
+                'ParameterKey': set.split('=')[0],
+                'ParameterValue': value
             }
         )
 
