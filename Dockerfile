@@ -2,8 +2,12 @@ FROM omerxx/awscli:alpine
 
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+COPY plugin.py requirements.txt /app/
 
-COPY plugin.py /app
+RUN apk -Uuv add py-pip && \
+    pip install -r requirements.txt && \
+    apk --purge -v del py-pip && \
+    rm /var/cache/apk/*
+
 
 CMD ["python", "/app/plugin.py"]
