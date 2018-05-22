@@ -54,12 +54,16 @@ def stack_status(client):
         time.sleep(5)
         response = client.describe_stacks(StackName=pp('stackname'))
         status = response["Stacks"][0]["StackStatus"]
-    elif status == "UPDATE_IN_PROGRESS":
-        response = client.cancel_update_stack(StackName=pp('stackname'))
-        print "Canceling update"
+        if "COMPLETE" in status:
+            print "Done updating"
+            break
     else:
-        print 'Check stack {}. Status is {}'.format(pp('stackname'), status)
-        exit(1)
+        if status == "UPDATE_IN_PROGRESS":
+            response = client.cancel_update_stack(StackName=pp('stackname'))
+            print "Canceling update"
+        else:
+            print 'Check stack {}. Status is {}'.format(pp('stackname'), status)
+            exit(1)
 
 
 
