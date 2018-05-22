@@ -35,6 +35,9 @@ def update_stack(client):
         UsePreviousTemplate=True,
         Parameters=env_handler(pp('params')),
         Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+        RollbackConfiguration={
+            'MonitoringTimeInMinutes': 0
+        }
     )
     print response
 
