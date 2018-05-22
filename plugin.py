@@ -50,7 +50,7 @@ def stack_status(client):
     status = response["Stacks"][0]["StackStatus"]
     
     while "COMPLETE" not in status and time.time()-start < timeout:
-        print '[{}]: {}'.format(time.time(), status)
+        print '[{}]: {}'.format(time.time()-start, status)
         time.sleep(5)
         response = client.describe_stacks(StackName=pp('stackname'))
         status = response["Stacks"][0]["StackStatus"]
