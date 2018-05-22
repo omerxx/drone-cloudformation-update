@@ -51,7 +51,7 @@ def stack_status(client):
     
     while "COMPLETE" not in status and time.time()-start < timeout:
         print '[{}]: {}'.format(time.time()-start, status)
-        time.sleep(5)
+        time.sleep(10)
         response = client.describe_stacks(StackName=pp('stackname'))
         status = response["Stacks"][0]["StackStatus"]
         if "COMPLETE" in status:
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     client = boto3.client('cloudformation', region_name='us-east-1')
     update_stack(client)
-    time.sleep(5)
+    time.sleep(10)
     stack_status(client)
 
  
