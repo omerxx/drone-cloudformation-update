@@ -45,7 +45,7 @@ def update_stack(client):
 
 def stack_status(client):
     start = time.time()
-    timeout = 180 if not pp('timeout') else pp('timeout')
+    timeout = 300 if not pp('timeout') else pp('timeout')
     response = client.describe_stacks(StackName=pp('stackname'))
     status = response["Stacks"][0]["StackStatus"]
     
