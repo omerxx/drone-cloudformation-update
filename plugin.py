@@ -17,7 +17,7 @@ def env_handler(paramString):
     for set in envSets:
         value = set.split('=')[1]
         if set.split('=')[0] == 'EntryPoint':
-            value = value.replace(';', ', ')
+            value = value.replace(' ', ', ')
 
         omap.append(
             {
