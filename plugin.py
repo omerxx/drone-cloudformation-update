@@ -60,7 +60,7 @@ def stack_status(client):
     else:
         if status == "UPDATE_IN_PROGRESS":
             response = client.cancel_update_stack(StackName=pp('stackname'))
-            print "Update failed to complete in {} seconds. Aborting and rolling back."
+            print 'Update failed to complete in {} seconds. Aborting and rolling back.'.format(time.time()-start)
         else:
             print 'Check stack {}. Status is {}'.format(pp('stackname'), status)
         
