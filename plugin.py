@@ -69,9 +69,9 @@ def stack_status(client):
 
 
 if __name__ == "__main__":
-    # os.environ['AWS_DEFAULT_REGION'] = 'us-east-1' if not pp('region') else pp('region')
+    region = 'us-east-1' if not pp('region') else pp('region')
 
-    client = boto3.client('cloudformation', region_name='us-east-1')
+    client = boto3.client('cloudformation', region_name=region)
     update_stack(client)
     time.sleep(10)
     stack_status(client)
