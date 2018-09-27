@@ -19,13 +19,22 @@ def env_handler(paramString):
         value = set.split('=')[1]
         if set.split('=')[0] == 'EntryPoint':
             value = value.replace(' ', ', ')
+        
+        if value:
+            omap.append(
+                {
+                    'ParameterKey': set.split('=')[0],
+                    'ParameterValue': value
+                }
+            )
+        else:
+            omap.append(
+                {
+                    'ParameterKey': set.split('=')[0],
+                    'UsePreviousValue': True
+                }
+            )
 
-        omap.append(
-            {
-                'ParameterKey': set.split('=')[0],
-                'ParameterValue': value
-            }
-        )
 
     return omap  
 
