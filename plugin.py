@@ -59,8 +59,6 @@ def update_stack(client, multistack=False):
         stackslist = pp('deploylist').split(',')
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
-            print stackname
-            print stackslist
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
                 UsePreviousTemplate=True,
@@ -72,17 +70,17 @@ def update_stack(client, multistack=False):
             )
             print response
 
-
-    response = client.update_stack(
-        StackName=pp('stackname'),
-        UsePreviousTemplate=True,
-        Parameters=env_handler(pp('params')),
-        Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
-        RollbackConfiguration={
-            'MonitoringTimeInMinutes': 0
-        }
-    )
-    print response
+    else:
+        response = client.update_stack(
+            StackName=pp('stackname'),
+            UsePreviousTemplate=True,
+            Parameters=env_handler(pp('params')),
+            Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+            RollbackConfiguration={
+                'MonitoringTimeInMinutes': 0
+            }
+        )
+        print response
 
 
 def stack_status(client):
