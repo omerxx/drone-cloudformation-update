@@ -82,7 +82,9 @@ if __name__ == "__main__":
 
     client = boto3.client('cloudformation', region_name=region)
     update_stack(client)
-    time.sleep(10)
-    stack_status(client)
+
+    if not pp('dontwaitfordeploy'):
+        time.sleep(10)
+        stack_status(client)
 
  
