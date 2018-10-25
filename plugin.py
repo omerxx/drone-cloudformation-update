@@ -58,7 +58,7 @@ def update_stack(client, multistack=False):
     if multistack:
         for stackname in list_handler(pp('deploylist')):
             response = client.update_stack(
-                StackName=stackname
+                StackName=stackname,
                 UsePreviousTemplate=True,
                 Parameters=env_handler(pp('params')),
                 Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
@@ -70,7 +70,7 @@ def update_stack(client, multistack=False):
 
 
     response = client.update_stack(
-        StackName=pp('stackname')
+        StackName=pp('stackname'),
         UsePreviousTemplate=True,
         Parameters=env_handler(pp('params')),
         Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
