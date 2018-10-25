@@ -38,25 +38,26 @@ def env_handler(paramString):
     return omap  
 
 
-def list_handler(listString):
-    omap = []
-    listSets = listString.split(',')
-    for set in listSets:
-        value = set.split('=')[1]
-        if value:
-            omap.append(
-                {
-                    'ParameterKey': set.split('=')[0],
-                    'ParameterValue': value
-                }
-            )
+# def list_handler(listString):
+#     omap = []
+#     listSets = listString.split(',')
+#     for set in listSets:
+#         value = set.split('=')[1]
+#         if value:
+#             omap.append(
+#                 {
+#                     'ParameterKey': set.split('=')[0],
+#                     'ParameterValue': value
+#                 }
+#             )
 
-    return omap  
+#     return omap  
 
 
 def update_stack(client, multistack=False):
     if multistack:
-        for stackname in list_handler(pp('deploylist')):
+        stackslist = pp('deploylist').split(',')
+        for stackname in stackslist:
             response = client.update_stack(
                 StackName=stackname,
                 UsePreviousTemplate=True,
