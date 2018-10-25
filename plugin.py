@@ -57,7 +57,7 @@ def env_handler(paramString):
 def update_stack(client, multistack=False):
     if multistack:
         stackslist = pp('deploylist').split(',')
-        targetenv = os.environ.get('DRONE_DEPLOY_TO')
+        targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
