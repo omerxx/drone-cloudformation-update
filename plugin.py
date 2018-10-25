@@ -57,9 +57,10 @@ def env_handler(paramString):
 def update_stack(client, multistack=False):
     if multistack:
         stackslist = pp('deploylist').split(',')
+        targetenv = os.environ.get('DRONE_DEPLOY_TO')
         for stackname in stackslist:
             response = client.update_stack(
-                StackName=stackname,
+                StackName="{}-{}".format(targetenv, stackname),
                 UsePreviousTemplate=True,
                 Parameters=env_handler(pp('params')),
                 Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
