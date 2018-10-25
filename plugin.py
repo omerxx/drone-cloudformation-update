@@ -40,7 +40,7 @@ def env_handler(paramString):
 
 def list_handler(listString):
     omap = []
-    listSets = paramString.split(',')
+    listSets = listString.split(',')
     for set in listSets:
         value = set.split('=')[1]
         if value:
