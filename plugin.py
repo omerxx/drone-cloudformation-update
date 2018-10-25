@@ -35,13 +35,42 @@ def env_handler(paramString):
                 }
             )
 
+    return omap  
+
+
+def list_handler(listString):
+    omap = []
+    listSets = paramString.split(',')
+    for set in listSets:
+        value = set.split('=')[1]
+        if value:
+            omap.append(
+                {
+                    'ParameterKey': set.split('=')[0],
+                    'ParameterValue': value
+                }
+            )
 
     return omap  
 
 
-def update_stack(client):
+def update_stack(client, multistack=False):
+    if multistack:
+        for stackname in list_handler(pp('deploylist')):
+            response = client.update_stack(
+                StackName=stackname
+                UsePreviousTemplate=True,
+                Parameters=env_handler(pp('params')),
+                Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+                RollbackConfiguration={
+                    'MonitoringTimeInMinutes': 0
+                }
+            )
+            print response
+
+
     response = client.update_stack(
-        StackName=pp('stackname'),
+        StackName=pp('stackname')
         UsePreviousTemplate=True,
         Parameters=env_handler(pp('params')),
         Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
@@ -81,7 +110,7 @@ if __name__ == "__main__":
     region = 'us-east-1' if not pp('region') else pp('region')
 
     client = boto3.client('cloudformation', region_name=region)
-    update_stack(client)
+    update_stack(client, pp('deploylist'))
 
     if not pp('dontwaitfordeploy'):
         time.sleep(10)
