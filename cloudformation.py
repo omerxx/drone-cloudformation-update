@@ -1,9 +1,8 @@
 import boto3
 from plugin import pp
 
-parameters = {}
-
 def get_stack_parameters(client, stackName):
+    parameters = {}
     response = client.describe_stacks(StackName=stackName)
     for param in response["Stacks"][0]["Parameters"]:
         parameters[param["ParameterKey"]] = param["ParameterValue"]
