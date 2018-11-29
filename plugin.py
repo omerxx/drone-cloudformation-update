@@ -62,6 +62,10 @@ def update_stack(client, multistack=False):
             print stackname
             try:
                 existingParameters = cloudformation.get_stack_parameters(client, "{}-{}".format(targetenv, stackname))
+            except Exception as e:
+                print "Error fetching params: {}".format(e)
+                continue
+            try:
                 response = client.update_stack(
                     StackName="{}-{}".format(targetenv, stackname),
                     UsePreviousTemplate=True,
