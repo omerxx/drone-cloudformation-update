@@ -2,7 +2,7 @@ FROM omerxx/awscli:alpine
 
 WORKDIR /app
 
-COPY plugin.py requirements.txt /app/
+COPY *.py requirements.txt /app/
 
 RUN apk -Uuv add py-pip && \
     pip install -r requirements.txt && \
