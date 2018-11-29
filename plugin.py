@@ -1,6 +1,7 @@
 import os
 import boto3
 import time
+import cloudformation
 
 def pp(name):
     # pp as in plugin parameter 
@@ -12,28 +13,41 @@ def pp(name):
         return None
 
 
-def env_handler(paramString):
+def env_handler(paramString, existingParameters):
     omap = []
     envSets = paramString.split(',')
     for set in envSets:
+        key = set.split('=')[0]
         value = set.split('=')[1]
-        if set.split('=')[0] == 'EntryPoint':
+        if key == 'EntryPoint':
             value = value.replace(' ', ', ')
+
+        if key in existingParameters:
+            del existingParameters[key]
         
         if value:
             omap.append(
                 {
-                    'ParameterKey': set.split('=')[0],
+                    'ParameterKey': key,
                     'ParameterValue': value
                 }
             )
         else:
             omap.append(
                 {
-                    'ParameterKey': set.split('=')[0],
+                    'ParameterKey': key,
                     'UsePreviousValue': True
                 }
             )
+
+    for pkey in existingParameters.iterkeys():
+        omap.append(
+            {
+                'ParameterKey': pkey,
+                'UsePreviousValue': True
+            }
+        )
+
 
     return omap  
 
@@ -54,7 +68,7 @@ def env_handler(paramString):
 #     return omap  
 
 
-def update_stack(client, multistack=False):
+def update_stack(client, existingParameters, multistack=False):
     if multistack:
         stackslist = pp('deploylist').split(',')
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
@@ -62,7 +76,7 @@ def update_stack(client, multistack=False):
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
                 UsePreviousTemplate=True,
-                Parameters=env_handler(pp('params')),
+                Parameters=env_handler(pp('params'), existingParameters),
                 Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
                 RollbackConfiguration={
                     'MonitoringTimeInMinutes': 0
@@ -74,7 +88,7 @@ def update_stack(client, multistack=False):
         response = client.update_stack(
             StackName=pp('stackname'),
             UsePreviousTemplate=True,
-            Parameters=env_handler(pp('params')),
+            Parameters=env_handler(pp('params'), existingParameters),
             Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
             RollbackConfiguration={
                 'MonitoringTimeInMinutes': 0
@@ -112,7 +126,9 @@ if __name__ == "__main__":
     region = 'us-east-1' if not pp('region') else pp('region')
 
     client = boto3.client('cloudformation', region_name=region)
-    update_stack(client, pp('deploylist'))
+    existingParameters = cloudformation.get_stack_parameters(client, pp('stackname'))
+
+    update_stack(client, existingParameters, pp('deploylist'))
 
     if not pp('dontwaitfordeploy'):
         time.sleep(10)
