@@ -133,8 +133,7 @@ if __name__ == "__main__":
     region = 'us-east-1' if not pp('region') else pp('region')
 
     client = boto3.client('cloudformation', region_name=region)
-    # update_stack(client, pp('deploylist'))
-    print cloudformation.get_stack_parameters(client, "test-actionsranker")
+    update_stack(client, pp('deploylist'))
 
     if not pp('dontwaitfordeploy'):
         time.sleep(10)
