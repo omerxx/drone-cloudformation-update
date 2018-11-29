@@ -62,6 +62,7 @@ def update_stack(client, multistack=False):
         for stackname in stackslist:
             print stackname
             existingParameters = cloudformation.get_stack_parameters(client, "{}-{}".format(targetenv, stackname))
+            print existingParameters
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
                 UsePreviousTemplate=True,
