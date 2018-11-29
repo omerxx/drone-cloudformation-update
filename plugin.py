@@ -57,7 +57,7 @@ def update_stack(client, multistack=False):
     if multistack:
         stackslist = pp('deploylist').split(',')
         print pp('deploylist')
-        print stacklist
+        print stackslist
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
             print stackname
