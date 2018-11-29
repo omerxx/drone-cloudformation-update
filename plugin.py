@@ -61,15 +61,19 @@ def update_stack(client, multistack=False):
         for stackname in stackslist:
             print stackname
             existingParameters = cloudformation.get_stack_parameters(client, "{}-{}".format(targetenv, stackname))
-            response = client.update_stack(
-                StackName="{}-{}".format(targetenv, stackname),
-                UsePreviousTemplate=True,
-                Parameters=env_handler(pp('params'), existingParameters),
-                Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
-                RollbackConfiguration={
-                    'MonitoringTimeInMinutes': 0
-                }
-            )
+            try:
+                response = client.update_stack(
+                    StackName="{}-{}".format(targetenv, stackname),
+                    UsePreviousTemplate=True,
+                    Parameters=env_handler(pp('params'), existingParameters),
+                    Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+                    RollbackConfiguration={
+                        'MonitoringTimeInMinutes': 0
+                    }
+                )
+            except Exception as e:
+                print "Error deploying {}: {}".format(stackname, e)
+
             print response
 
     else:
