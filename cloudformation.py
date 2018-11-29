@@ -4,7 +4,7 @@ from plugin import pp
 parameters = {}
 
 def get_stack_parameters(client, stackName):
-    response = client.describe_stacks(StackName=stackname)
+    response = client.describe_stacks(StackName=stackName)
     for param in response["Stacks"][0]["Parameters"]:
         parameters[param["ParameterKey"]] = param["ParameterValue"]
 
