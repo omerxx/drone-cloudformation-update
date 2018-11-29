@@ -60,8 +60,8 @@ def update_stack(client, multistack=False):
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
             print stackname
-            existingParameters = cloudformation.get_stack_parameters(client, "{}-{}".format(targetenv, stackname))
             try:
+                existingParameters = cloudformation.get_stack_parameters(client, "{}-{}".format(targetenv, stackname))
                 response = client.update_stack(
                     StackName="{}-{}".format(targetenv, stackname),
                     UsePreviousTemplate=True,
@@ -93,21 +93,32 @@ def update_stack(client, multistack=False):
 def stack_status(client):
     start = time.time()
     timeout = 360 if not pp('timeout') else pp('timeout')
-    response = client.describe_stacks(StackName=pp('stackname'))
-    status = response["Stacks"][0]["StackStatus"]
+    try:
+        response = client.describe_stacks(StackName=pp('stackname'))
+        status = response["Stacks"][0]["StackStatus"]
+    except Exception as e:
+        print "Error: {}".format(e)
+        exit(1)
     
     while "COMPLETE" not in status and time.time()-start < timeout:
         print '[{}]: {}'.format(time.time()-start, status)
         time.sleep(10)
-        response = client.describe_stacks(StackName=pp('stackname'))
-        status = response["Stacks"][0]["StackStatus"]
-        if "COMPLETE" in status:
-            print "Done updating"
-            break
+        try:
+            response = client.describe_stacks(StackName=pp('stackname'))
+            status = response["Stacks"][0]["StackStatus"]
+            if "COMPLETE" in status:
+                print "Done updating"
+                break
+        except Exception as e:
+            print "Error: {}".format(e)
+
     else:
         if status == "UPDATE_IN_PROGRESS":
-            response = client.cancel_update_stack(StackName=pp('stackname'))
-            print 'Update failed to complete in {} seconds. Aborting and rolling back.'.format(time.time()-start)
+            try:
+                response = client.cancel_update_stack(StackName=pp('stackname'))
+                print 'Update failed to complete in {} seconds. Aborting and rolling back.'.format(time.time()-start)
+            except Exception as e:
+                print "Error: {}".format(e)
         else:
             print 'Check stack {}. Status is {}'.format(pp('stackname'), status)
         
@@ -119,8 +130,8 @@ if __name__ == "__main__":
     region = 'us-east-1' if not pp('region') else pp('region')
 
     client = boto3.client('cloudformation', region_name=region)
-    update_stack(client, pp('deploylist'))
-    # print cloudformation.get_stack_parameters(client, "test-logger")
+    # update_stack(client, pp('deploylist'))
+    print cloudformation.get_stack_parameters(client, "test-actionsranker")
 
     if not pp('dontwaitfordeploy'):
         time.sleep(10)
