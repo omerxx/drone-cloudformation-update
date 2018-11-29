@@ -52,27 +52,13 @@ def env_handler(paramString, existingParameters):
     return omap  
 
 
-# def list_handler(listString):
-#     omap = []
-#     listSets = listString.split(',')
-#     for set in listSets:
-#         value = set.split('=')[1]
-#         if value:
-#             omap.append(
-#                 {
-#                     'ParameterKey': set.split('=')[0],
-#                     'ParameterValue': value
-#                 }
-#             )
 
-#     return omap  
-
-
-def update_stack(client, existingParameters, multistack=False):
+def update_stack(client, multistack=False):
     if multistack:
         stackslist = pp('deploylist').split(',')
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
+            existingParameters = cloudformation.get_stack_parameters(client, stackname)
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
                 UsePreviousTemplate=True,
@@ -85,6 +71,7 @@ def update_stack(client, existingParameters, multistack=False):
             print response
 
     else:
+        existingParameters = cloudformation.get_stack_parameters(client, stackname)
         response = client.update_stack(
             StackName=pp('stackname'),
             UsePreviousTemplate=True,
@@ -126,9 +113,7 @@ if __name__ == "__main__":
     region = 'us-east-1' if not pp('region') else pp('region')
 
     client = boto3.client('cloudformation', region_name=region)
-    existingParameters = cloudformation.get_stack_parameters(client, pp('stackname'))
-
-    update_stack(client, existingParameters, pp('deploylist'))
+    update_stack(client, pp('deploylist'))
 
     if not pp('dontwaitfordeploy'):
         time.sleep(10)
