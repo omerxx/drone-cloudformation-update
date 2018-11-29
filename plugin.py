@@ -56,13 +56,11 @@ def env_handler(paramString, existingParameters):
 def update_stack(client, multistack=False):
     if multistack:
         stackslist = pp('deploylist').split(',')
-        print pp('deploylist')
         print stackslist
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
             print stackname
             existingParameters = cloudformation.get_stack_parameters(client, "{}-{}".format(targetenv, stackname))
-            print existingParameters
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
                 UsePreviousTemplate=True,
