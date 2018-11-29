@@ -3,8 +3,8 @@ pipeline:
     image: plugins/docker
     repo: omerxx/drone-cloudformation-update
     tags: 
-      - latest
       - ${DRONE_BUILD_NUMBER}
+      - spotim
     secrets:
       - docker_username
       - docker_password
