@@ -71,9 +71,9 @@ def update_stack(client, multistack=False):
                         'MonitoringTimeInMinutes': 0
                     }
                 )
+                print response
             except Exception as e:
                 print "Error deploying {}: {}".format(stackname, e)
-                print response
 
     else:
         existingParameters = cloudformation.get_stack_parameters(client, stackname)
