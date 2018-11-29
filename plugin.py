@@ -58,6 +58,7 @@ def update_stack(client, multistack=False):
         stackslist = pp('deploylist').split(',')
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
+            print stackname
             existingParameters = cloudformation.get_stack_parameters(client, stackname)
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
