@@ -61,7 +61,7 @@ def update_stack(client, multistack=False):
         targetenv = os.environ.get('DRONE_DEPLOY_TO').split('-')[0]
         for stackname in stackslist:
             print stackname
-            existingParameters = cloudformation.get_stack_parameters(client, stackname)
+            existingParameters = cloudformation.get_stack_parameters(client, "{}-{}".format(targetenv, stackname))
             response = client.update_stack(
                 StackName="{}-{}".format(targetenv, stackname),
                 UsePreviousTemplate=True,
