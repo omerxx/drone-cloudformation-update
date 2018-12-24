@@ -80,7 +80,7 @@ def update_stack(client, multistack=False):
                 print "Error deploying {}: {}".format(stackname, e)
 
     else:
-        existingParameters = cloudformation.get_stack_parameters(client, stackname)
+        existingParameters = cloudformation.get_stack_parameters(client, pp('stackname'))
         response = client.update_stack(
             StackName=pp('stackname'),
             UsePreviousTemplate=True,
