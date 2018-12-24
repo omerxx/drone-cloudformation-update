@@ -1,11 +1,13 @@
-pipeline:
-  docker:
-    image: plugins/docker
-    repo: omerxx/drone-cloudformation-update
-    tags: 
-      - ${DRONE_BUILD_NUMBER}
-      - drove-test
-    secrets:
-      - docker_username
-      - docker_password
+kind: pipeline
+name: default
 
+steps:
+- name: docker  
+  image: plugins/docker
+  settings:
+    repo: omerxx/drone-cloudformation-update
+    tags: drone-test
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
