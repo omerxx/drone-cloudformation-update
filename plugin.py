@@ -3,7 +3,7 @@ import boto3
 import time
 
 def pp(name):
-    # pp as in plugin parameter 
+    # pp as in plugin parameter
     param = os.environ.get('{}_{}'.format('PLUGIN', name.upper()))
     if param:
         return param
@@ -27,7 +27,7 @@ def env_handler(paramString):
             }
         )
 
-    return omap  
+    return omap
 
 
 def update_stack(client):
@@ -38,7 +38,8 @@ def update_stack(client):
         Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
         RollbackConfiguration={
             'MonitoringTimeInMinutes': 0
-        }
+        },
+        Tags=[dict(Key='DeployedBy', Value='Drone')]
     )
     print response
 
@@ -48,7 +49,7 @@ def stack_status(client):
     timeout = 360 if not pp('timeout') else pp('timeout')
     response = client.describe_stacks(StackName=pp('stackname'))
     status = response["Stacks"][0]["StackStatus"]
-    
+
     while "COMPLETE" not in status and time.time()-start < timeout:
         print '[{}]: {}'.format(time.time()-start, status)
         time.sleep(10)
@@ -63,7 +64,7 @@ def stack_status(client):
             print 'Update failed to complete in {} seconds. Aborting and rolling back.'.format(time.time()-start)
         else:
             print 'Check stack {}. Status is {}'.format(pp('stackname'), status)
-        
+
         exit(1)
 
 
@@ -76,4 +77,4 @@ if __name__ == "__main__":
     time.sleep(10)
     stack_status(client)
 
- 
+
